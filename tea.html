@@ -1,513 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tea Tracker</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#2e3440">
-<meta name="theme-color" content="#2e3440">
-<style>
-:root {
---nord0: #2e3440;
---nord1: #3b4252;
---nord2: #434c5e;
---nord3: #4c566a;
---nord4: #d8dee9;
---nord5: #e5e9f0;
---nord6: #eceff4;
---nord7: #8fbcbb;
---nord8: #88c0d0;
---nord9: #81a1c1;
---nord11: #bf616a;
---nord14: #a3be8c;
-}
-* {
-box-sizing: border-box;
-margin: 0;
-padding: 0;
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
--webkit-tap-highlight-color: transparent;
-}
-body {
-background-color: var(--nord0);
-color: var(--nord4);
-padding: 16px;
-max-width: 500px;
-margin: 0 auto;
-}
-h2, h3 {
-color: var(--nord6);
-margin-bottom: 12px;
-font-weight: 600;
-}
-.section {
-background-color: var(--nord1);
-border-radius: 12px;
-padding: 16px;
-margin-bottom: 16px;
-box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-}
-.input-group {
-display: grid;
-grid-template-columns: 2fr 1fr 1fr;
-gap: 8px;
-margin-bottom: 12px;
-}
-input {
-background-color: var(--nord2);
-border: 1px solid var(--nord3);
-color: var(--nord6);
-padding: 10px;
-border-radius: 6px;
-font-size: 14px;
-outline: none;
-width: 100%;
-}
-input:focus {
-border-color: var(--nord8);
-}
-button {
-cursor: pointer;
-border: none;
-border-radius: 6px;
-font-weight: bold;
-}
-button:active {
-opacity: 0.7;
-}
-.btn-add {
-background-color: var(--nord8);
-color: var(--nord0);
-padding: 10px;
-width: 100%;
-}
-.tea-list {
-max-height: 180px;
-overflow-y: auto;
-margin-top: 16px;
-}
-.tea-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-background-color: var(--nord2);
-padding: 10px 12px;
-border-radius: 8px;
-margin-bottom: 8px;
-border: 2px solid transparent;
-}
-.tea-item.selected {
-border-color: var(--nord8);
-background-color: #3b4252;
-}
-.tea-info {
-flex-grow: 1;
-cursor: pointer;
-}
-.tea-name {
-font-weight: bold;
-color: var(--nord6);
-}
-.tea-weight {
-font-size: 12px;
-color: var(--nord9);
-margin-top: 2px;
-}
-.tea-actions {
-display: flex;
-gap: 6px;
-align-items: center;
-}
-.btn-topup {
-background-color: var(--nord7);
-color: var(--nord0);
-padding: 6px 10px;
-font-size: 12px;
-}
-.btn-delete {
-background-color: var(--nord11);
-color: var(--nord6);
-padding: 6px 10px;
-font-size: 12px;
-}
-.tabs {
-display: flex;
-gap: 8px;
-margin-bottom: 12px;
-}
-.tab-btn {
-flex: 1;
-padding: 10px;
-background-color: var(--nord2);
-color: var(--nord4);
-}
-.tab-btn.active {
-background-color: var(--nord8);
-color: var(--nord0);
-}
-.timer-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-.step-indicators {
-display: flex;
-gap: 6px;
-margin: 12px 0;
-height: 6px;
-}
-.step-dot {
-flex: 1;
-height: 6px;
-background-color: var(--nord3);
-border-radius: 3px;
-}
-.step-dot.active {
-background-color: var(--nord8);
-}
-.step-dot.done {
-background-color: var(--nord14);
-}
-.timer-display {
-font-size: 64px;
-font-weight: 700;
-text-align: center;
-font-family: monospace;
-color: var(--nord6);
-margin: 16px 0;
-}
-.time-adjusters {
-display: flex;
-justify-content: center;
-gap: 20px;
-margin-bottom: 20px;
-}
-.btn-adjust {
-background-color: var(--nord2);
-color: var(--nord5);
-font-size: 18px;
-padding: 8px 16px;
-border-radius: 20px;
-min-width: 70px;
-}
-.controls {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 12px;
-}
-.btn-main {
-padding: 14px;
-font-size: 16px;
-color: var(--nord0);
-}
-.btn-start { background-color: var(--nord14); }
-.btn-pause { background-color: var(--nord9); }
-.btn-reset { background-color: var(--nord3); color: var(--nord6); }
-.btn-finish { background-color: var(--nord7); grid-column: span 2; margin-top: 10px; }
-.btn-next { background-color: var(--nord8); grid-column: span 2; margin-bottom: 10px; }
-.disabled {
-opacity: 0.4;
-pointer-events: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Tracker</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2e3440">
+    <meta name="theme-color" content="#2e3440">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Tea%22,%22short_name%22:%22Tea%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#2e3440%22,%22theme_color%22:%22#2e3440%22}">
+    <style>
+        :root {
+            --nord0: #2e3440;
+            --nord1: #3b4252;
+            --nord2: #434c5e;
+            --nord3: #4c566a;
+            --nord4: #d8dee9;
+            --nord5: #e5e9f0;
+            --nord6: #eceff4;
+            --nord7: #8fbcbb;
+            --nord8: #88c0d0;
+            --nord9: #81a1c1;
+            --nord11: #bf616a;
+            --nord14: #a3be8c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--nord0);
+            color: var(--nord4);
+            padding: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h2, h3 {
+            color: var(--nord6);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .section {
+            background-color: var(--nord1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        input {
+            background-color: var(--nord2);
+            border: 1px solid var(--nord3);
+            color: var(--nord6);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: var(--nord8);
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        button:active {
+            opacity: 0.7;
+        }
+
+        .btn-add {
+            background-color: var(--nord8);
+            color: var(--nord0);
+            padding: 10px;
+            width: 100%;
+        }
+
+        .tea-list {
+            max-height: 180px;
+            overflow-y: auto;
+            margin-top: 16px;
+        }
+
+        .tea-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--nord2);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+        }
+
+        .tea-item.selected {
+            border-color: var(--nord8);
+            background-color: #3b4252;
+        }
+
+        .tea-info {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .tea-name {
+            font-weight: bold;
+            color: var(--nord6);
+        }
+
+        .tea-weight {
+            font-size: 12px;
+            color: var(--nord9);
+            margin-top: 2px;
+        }
+
+        .tea-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn-topup {
+            background-color: var(--nord7);
+            color: var(--nord0);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background-color: var(--nord11);
+            color: var(--nord6);
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: var(--nord2);
+            color: var(--nord4);
+        }
+
+        .tab-btn.active {
+            background-color: var(--nord8);
+            color: var(--nord0);
+        }
+
+        .timer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-indicators {
+            display: flex;
+            gap: 6px;
+            margin: 12px 0;
+            height: 6px;
+        }
+
+        .step-dot {
+            flex: 1;
+            height: 6px;
+            background-color: var(--nord3);
+            border-radius: 3px;
+        }
+
+        .step-dot.active {
+            background-color: var(--nord8);
+        }
+
+        .step-dot.done {
+            background-color: var(--nord14);
+        }
+
+        .timer-display {
+            font-size: 64px;
+            font-weight: 700;
+            text-align: center;
+            font-family: monospace;
+            color: var(--nord6);
+            margin: 16px 0;
+        }
+
+        .time-adjusters {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .btn-adjust {
+            background-color: var(--nord2);
+            color: var(--nord5);
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            min-width: 70px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-main {
+            padding: 14px;
+            font-size: 16px;
+            color: var(--nord0);
+        }
+
+        .btn-start { background-color: var(--nord14); }
+        .btn-pause { background-color: var(--nord9); }
+        .btn-reset { background-color: var(--nord3); color: var(--nord6); }
+        .btn-finish { background-color: var(--nord7); grid-column: span 2; margin-top: 10px; }
+        .btn-next { background-color: var(--nord8); grid-column: span 2; margin-bottom: 10px; }
+
+        .disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-<div class="section">
-<h2>Tea Shelf</h2>
-<div class="input-group">
-<input type="text" id="teaName" placeholder="Name...">
-<input type="number" id="teaWeight" placeholder="Weight (g)">
-<input type="number" id="teaPortion" placeholder="Portion (g)" value="2">
-</div>
-<button class="btn-add" onclick="addTea()">Add Tea</button>
-<div class="tea-list" id="teaList"></div>
-</div>
-<div class="tabs">
-<button class="tab-btn active" id="tabPres" onclick="switchMode('preset')">Preset Mode</button>
-<button class="tab-btn" id="tabFree" onclick="switchMode('free')">Free Mode</button>
-</div>
-<div class="section" id="timerSection">
-<div class="timer-header">
-<h2 id="currentTeaTitle">Select tea</h2>
-<span id="stepTitle" style="color: var(--nord9); font-weight: bold;">Steep 1</span>
-</div>
-<div class="step-indicators" id="indicatorsBox">
-<div class="step-dot active" id="dot0"></div>
-<div class="step-dot" id="dot1"></div>
-<div class="step-dot" id="dot2"></div>
-</div>
-<div class="timer-display" id="display">01:00</div>
-<div class="time-adjusters" id="adjustersBox">
-<button class="btn-adjust" id="minusBtn" onclick="adjustTime(-5)">-5s</button>
-<select id="timePicker" onchange="pickerChanged()" style="display:none; background-color: var(--nord2); color: var(--nord6); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--nord3); font-size: 16px; font-weight: bold; text-align: center; outline: none;"></select>
-<button class="btn-adjust" id="plusBtn" onclick="adjustTime(5)">+5s</button>
-</div>
-<div class="controls">
-<button class="btn-main btn-next" id="nextBtn" onclick="nextFreeSteep()" style="display:none;">Next Steep</button>
-<button class="btn-main btn-start" id="startBtn" onclick="toggleTimer()">Start</button>
-<button class="btn-main btn-reset" onclick="resetCurrentStep()">Reset</button>
-<button class="btn-main btn-finish disabled" id="finishBtn" onclick="finishSession()">Finish Session</button>
-</div>
-</div>
-<script>
-    let teas = JSON.parse(localStorage.getItem('tea_storage')) || [];
-    let selectedTeaId = null;
-    let currentMode = 'preset';
-    const baseSteps = new Array(60, 15, 40);
-    let currentSteps = new Array(60, 15, 40);
-    let currentStepIndex = 0;
-    let timeLeft = 60;
-    let timerInterval = null;
-    let isRunning = false;
-    
-    function initPicker() {
-    const picker = document.getElementById('timePicker');
-    picker.innerHTML = '';
-    for (let i = 5; i <= 180; i += 5) {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.innerText = i + ' sec';
-    if (i === 15) opt.selected = true;
-    picker.appendChild(opt);
-    }
-    }
-    
-    function pickerChanged() {
-    if (isRunning) return;
-    const picker = document.getElementById('timePicker');
-    timeLeft = parseInt(picker.value);
-    updateTimerUI();
-    }
-    
-    function beep() {
-    try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.3);
-    } catch (e) {}
-    }
-    
-    function saveToStorage() {
-    localStorage.setItem('tea_storage', JSON.stringify(teas));
-    renderTeas();
-    }
-    
-    function addTea() {
-    const name = document.getElementById('teaName').value.trim();
-    const weight = parseInt(document.getElementById('teaWeight').value);
-    const portion = parseInt(document.getElementById('teaPortion').value) || 7;
-    if (!name || isNaN(weight)) return alert('Fill fields');
-    teas.push({ id: Date.now(), name, weight, portion });
-    saveToStorage();
-    document.getElementById('teaName').value = '';
-    document.getElementById('teaWeight').value = '';
-    }
-    
-    function topUpTea(id, e) {
-    e.stopPropagation();
-    const tea = teas.find(t => t.id === id);
-    if (!tea) return;
-    const amount = parseInt(prompt(`How many grams of "${tea.name}" to add?`, "50"));
-    if (isNaN(amount) || amount <= 0) return;
-    tea.weight += amount;
-    saveToStorage();
-    updateTimerUI();
-    }
-    
-    function deleteTea(id, e) {
-    e.stopPropagation();
-    teas = teas.filter(t => t.id !== id);
-    if (selectedTeaId === id) selectedTeaId = null;
-    saveToStorage();
-    updateTimerUI();
-    }
-    
-    function selectTea(id) {
-    selectedTeaId = id;
-    resetTimerSystem();
-    renderTeas();
-    updateTimerUI();
-    }
-    
-    function renderTeas() {
-    const list = document.getElementById('teaList');
-    list.innerHTML = '';
-    teas.forEach(tea => {
-    const isSelected = tea.id === selectedTeaId;
-    list.innerHTML += `
-    <div class="tea-item ${isSelected ? 'selected' : ''}" onclick="selectTea(${tea.id})">
-    <div class="tea-info">
-    <div class="tea-name">${tea.name}</div>
-    <div class="tea-weight">${tea.weight}g (portion: ${tea.portion}g)</div>
+    <div class="section">
+        <h2>Tea Shelf</h2>
+        <div class="input-group">
+            <input type="text" id="teaName" placeholder="Name...">
+            <input type="number" id="teaWeight" placeholder="Weight (g)">
+            <input type="number" id="teaPortion" placeholder="Portion (g)" value="2">
+        </div>
+        <button class="btn-add" onclick="addTea()">Add Tea</button>
+        <div class="tea-list" id="teaList"></div>
     </div>
-    <div class="tea-actions">
-    <button class="btn-topup" onclick="topUpTea(${tea.id}, event)">+ Top Up</button>
-    <button class="btn-delete" onclick="deleteTea(${tea.id}, event)">X</button>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="tabPres" onclick="switchMode('preset')">Preset Mode</button>
+        <button class="tab-btn" id="tabFree" onclick="switchMode('free')">Free Mode</button>
     </div>
-    </div>
-    `;
-    });
-    }
-    
-    function switchMode(mode) {
-    currentMode = mode;
-    document.getElementById('tabPres').classList.toggle('active', mode === 'preset');
-    document.getElementById('tabFree').classList.toggle('active', mode === 'free');
-    document.getElementById('indicatorsBox').style.display = mode === 'preset' ? 'flex' : 'none';
-    document.getElementById('nextBtn').style.display = mode === 'free' ? 'block' : 'none';
-    if (mode === 'free') {
-    document.getElementById('minusBtn').style.display = 'none';
-    document.getElementById('plusBtn').style.display = 'none';
-    document.getElementById('timePicker').style.display = 'block';
-    document.getElementById('timePicker').value = 15;
-    } else {
-    document.getElementById('minusBtn').style.display = 'block';
-    document.getElementById('plusBtn').style.display = 'block';
-    document.getElementById('timePicker').style.display = 'none';
-    }
-    resetTimerSystem();
-    updateTimerUI();
-    }
-    </script>
-<script>
-    function updateTimerUI() {
-    const activeTea = teas.find(t => t.id === selectedTeaId);
-    if (activeTea) {
-    document.getElementById('currentTeaTitle').innerText = activeTea.name;
-    document.getElementById('finishBtn').classList.remove('disabled');
-    } else {
-    document.getElementById('currentTeaTitle').innerText = 'Select tea';
-    document.getElementById('finishBtn').classList.add('disabled');
-    }
-    document.getElementById('stepTitle').innerText = `Steep ${currentStepIndex + 1}`;
-    const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-    const secs = (timeLeft % 60).toString().padStart(2, '0');
-    document.getElementById('display').innerText = `${mins}:${secs}`;
-    if (currentMode === 'preset') {
-    for(let i=0; i<3; i++) {
-    const dot = document.getElementById(`dot${i}`);
-    if(dot){
-    dot.className = 'step-dot';
-    if (i < currentStepIndex) dot.classList.add('done');
-    if (i === currentStepIndex) dot.classList.add('active');
-    }
-    }
-    }
-    }
-    
-    function toggleTimer() {
-    if (!selectedTeaId) return alert('Select tea');
-    const startBtn = document.getElementById('startBtn');
-    if (isRunning) {
-    clearInterval(timerInterval);
-    startBtn.innerText = 'Start';
-    startBtn.className = 'btn-main btn-start';
-    isRunning = false;
-    } else {
-    startBtn.innerText = 'Pause';
-    startBtn.className = 'btn-main btn-pause';
-    isRunning = true;
-    timerInterval = setInterval(() => {
-    if (timeLeft > 0) {
-    timeLeft--;
-    updateTimerUI();
-    } else {
-    clearInterval(timerInterval);
-    beep();
-    isRunning = false;
-    startBtn.innerText = 'Start';
-    startBtn.className = 'btn-main btn-start';
-    if (currentMode === 'preset') {
-    if (currentStepIndex < 2) {
-    currentStepIndex++;
-    timeLeft = currentSteps[currentStepIndex];
-    } else {
-    alert('Preset steeps completed');
-    resetTimerSystem();
-    }
-    } else {
-    alert(`Steep ${currentStepIndex + 1} completed`);
-    }
-    updateTimerUI();
-    }
-    }, 1000);
-    }
-    }
-    
-    function adjustTime(amount) {
-    if (!selectedTeaId || currentMode === 'free') return;
-    timeLeft += amount;
-    if (timeLeft < 0) timeLeft = 0;
-    currentSteps[currentStepIndex] = timeLeft;
-    updateTimerUI();
-    }
-    
-    function nextFreeSteep() {
-    if (!selectedTeaId) return;
-    clearInterval(timerInterval);
-    isRunning = false;
-    document.getElementById('startBtn').innerText = 'Start';
-    document.getElementById('startBtn').className = 'btn-main btn-start';
-    currentStepIndex++;
-    const picker = document.getElementById('timePicker');
-    timeLeft = parseInt(picker.value);
-    updateTimerUI();
-    }
-    
-    function resetCurrentStep() {
-    clearInterval(timerInterval);
-    isRunning = false;
-    document.getElementById('startBtn').innerText = 'Start';
-    document.getElementById('startBtn').className = 'btn-main btn-start';
-    if (currentMode === 'preset') {
-    timeLeft = currentSteps[currentStepIndex];
-    } else {
-    const picker = document.getElementById('timePicker');
-    timeLeft = parseInt(picker.value);
-    }
-    updateTimerUI();
-    }
-    
-    function resetTimerSystem() {
-    clearInterval(timerInterval);
-    isRunning = false;
-    document.getElementById('startBtn').innerText = 'Start';
-    document.getElementById('startBtn').className = 'btn-main btn-start';
-    if (currentMode === 'preset') {
-        currentSteps = [60, 15, 40];
-        currentStepIndex = 0;
-        timeLeft = currentSteps[0];
-    } else {
-        currentStepIndex = 0;
-        const picker = document.getElementById('timePicker');
-        timeLeft = picker ? parseInt(picker.value) : 15;
-    }
-}
-    
-    function finishSession() {
-    const activeTea = teas.find(t => t.id === selectedTeaId);
-    if (!activeTea) return;
-    if (activeTea.weight >= activeTea.portion) {
-    activeTea.weight -= activeTea.portion;
-    saveToStorage();
-    alert(`Deducted ${activeTea.portion}g`);
-    } else {
-    alert('Not enough tea');
-    }
-    resetTimerSystem();
-    updateTimerUI();
-    }
-    
-    initPicker();
-    renderTeas();
-    updateTimerUI();
-    </script>
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Tea%22,%22short_name%22:%22Tea%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#2e3440%22,%22theme_color%22:%22#2e3440%22}">
-    </body>
-    </html>
+
+    <div class="section" id="timerSection">
+        <div class="timer-header">
+            <h2 id="currentTeaTitle">Select tea</h2>
+            <span id="stepTitle" style="color: var(--nord9); font-weight: bold;">Steep 1</span>
+        </div>
         
+        <div class="step-indicators" id="indicatorsBox">
+            <div class="step-dot active" id="dot0"></div>
+            <div class="step-dot" id="dot1"></div>
+            <div class="step-dot" id="dot2"></div>
+        </div>
+
+        <div class="timer-display" id="display">01:00</div>
+
+        <div class="time-adjusters" id="adjustersBox">
+            <button class="btn-adjust" id="minusBtn" onclick="adjustTime(-5)">-5s</button>
+            <select id="timePicker" style="display:none; background-color: var(--nord2); color: var(--nord6); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--nord3); font-size: 16px; font-weight: bold; text-align: center; outline: none;" onchange="pickerChanged()"></select>
+            <button class="btn-adjust" id="plusBtn" onclick="adjustTime(5)">+5s</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn-main btn-next" id="nextBtn" onclick="nextFreeSteep()" style="display:none;">Next Steep</button>
+            <button class="btn-main btn-start" id="startBtn" onclick="toggleTimer()">Start</button>
+            <button class="btn-main btn-reset" onclick="resetCurrentStep()">Reset</button>
+            <button class="btn-main btn-finish disabled" id="finishBtn" onclick="finishSession()">Finish Session</button>
+        </div>
+    </div>
+
+    <script>
+        let teas = JSON.parse(localStorage.getItem('tea_storage')) || [];
+        let selectedTeaId = null;
+        let currentMode = 'preset';
+        let currentSteps = [60, 15, 40];
+        let currentStepIndex = 0;
+        let timeLeft = 60;
+        let timerInterval = null;
+        let isRunning = false;
+        
+        function initPicker() {
+            const picker = document.getElementById('timePicker');
+            picker.innerHTML = '';
+            for (let i = 5; i <= 180; i += 5) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = i + ' sec';
+                if (i === 15) opt.selected = true;
+                picker.appendChild(opt);
+            }
+        }
+        
+        function pickerChanged() {
+            if (isRunning) return;
+            const picker = document.getElementById('timePicker');
+            timeLeft = parseInt(picker.value);
+            updateTimerUI();
+        }
+        
+        function beep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) {}
+        }
+        
+        function saveToStorage() {
+            localStorage.setItem('tea_storage', JSON.stringify(teas));
+            renderTeas();
+        }
+        
+        function addTea() {
+            const name = document.getElementById('teaName').value.trim();
+            const weight = parseInt(document.getElementById('teaWeight').value);
+            const portion = parseInt(document.getElementById('teaPortion').value) || 7;
+            if (!name || isNaN(weight)) return alert('Fill fields');
+            teas.push({ id: Date.now(), name, weight, portion });
+            saveToStorage();
+            document.getElementById('teaName').value = '';
+            document.getElementById('teaWeight').value = '';
+        }
+        
+        function topUpTea(id, e) {
+            e.stopPropagation();
+            const tea = teas.find(t => t.id === id);
+            if (!tea) return;
+            const amount = parseInt(prompt(`How many grams of "${tea.name}" to add?`, "50"));
+            if (isNaN(amount) || amount <= 0) return;
+            tea.weight += amount;
+            saveToStorage();
+            updateTimerUI();
+        }
+        
+        function deleteTea(id, e) {
+            e.stopPropagation();
+            teas = teas.filter(t => t.id !== id);
+            if (selectedTeaId === id) selectedTeaId = null;
+            saveToStorage();
+            updateTimerUI();
+        }
+        
+        function selectTea(id) {
+            selectedTeaId = id;
+            resetTimerSystem();
+            renderTeas();
+            updateTimerUI();
+        }
+        
+        function renderTeas() {
+            const list = document.getElementById('teaList');
+            list.innerHTML = '';
+            teas.forEach(tea => {
+                const isSelected = tea.id === selectedTeaId;
+                list.innerHTML += `
+                    <div class="tea-item ${isSelected ? 'selected' : ''}" onclick="selectTea(${tea.id})">
+                        <div class="tea-info">
+                            <div class="tea-name">${tea.name}</div>
+                            <div class="tea-weight">${tea.weight}g (portion: ${tea.portion}g)</div>
+                        </div>
+                        <div class="tea-actions">
+                            <button class="btn-topup" onclick="topUpTea(${tea.id}, event)">+ Top Up</button>
+                            <button class="btn-delete" onclick="deleteTea(${tea.id}, event)">X</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('tabPres').classList.toggle('active', mode === 'preset');
+            document.getElementById('tabFree').classList.toggle('active', mode === 'free');
+            document.getElementById('indicatorsBox').style.display = mode === 'preset' ? 'flex' : 'none';
+            document.getElementById('nextBtn').style.display = mode === 'free' ? 'block' : 'none';
+            if (mode === 'free') {
+                document.getElementById('minusBtn').style.display = 'none';
+                document.getElementById('plusBtn').style.display = 'none';
+                document.getElementById('timePicker').style.display = 'block';
+                document.getElementById('timePicker').value = 15;
+            } else {
+                document.getElementById('minusBtn').style.display = 'block';
+                document.getElementById('plusBtn').style.display = 'block';
+                document.getElementById('timePicker').style.display = 'none';
+            }
+            resetTimerSystem();
+            updateTimerUI();
+        }
+
+        function updateTimerUI() {
+            const activeTea = teas.find(t => t.id === selectedTeaId);
+            if (activeTea) {
+                document.getElementById('currentTeaTitle').innerText = activeTea.name;
+                document.getElementById('finishBtn').classList.remove('disabled');
+            } else {
+                document.getElementById('currentTeaTitle').innerText = 'Select tea';
+                document.getElementById('finishBtn').classList.add('disabled');
+            }
+            document.getElementById('stepTitle').innerText = `Steep ${currentStepIndex + 1}`;
+            const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const secs = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('display').innerText = `${mins}:${secs}`;
+            if (currentMode === 'preset') {
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.getElementById(`dot${i}`);
+                    if (dot) {
+                        dot.className = 'step-dot';
+                        if (i < currentStepIndex) dot.classList.add('done');
+                        if (i === currentStepIndex) dot.classList.add('active');
+                    }
+                }
+            }
+        }
+        
+        function toggleTimer() {
+            if (!selectedTeaId) return alert('Select tea');
+            const startBtn = document.getElementById('startBtn');
+            if (isRunning) {
+                clearInterval(timerInterval);
+                startBtn.innerText = 'Start';
+                startBtn.className = 'btn-main btn-start';
+                isRunning = false;
+            } else {
+                startBtn.innerText = 'Pause';
+                startBtn.className = 'btn-main btn-pause';
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerUI();
+                    } else {
+                        clearInterval(timerInterval);
+                        beep();
+                        isRunning = false;
+                        startBtn.innerText = 'Start';
+                        startBtn.className = 'btn-main btn-start';
+                        if (currentMode === 'preset') {
+                            if (currentStepIndex < 2) {
+                                currentStepIndex++;
+                                timeLeft = currentSteps[currentStepIndex];
+                            } else {
+                                alert('Preset steeps completed');
+                                resetTimerSystem();
+                            }
+                        } else {
+                            alert(`Steep ${currentStepIndex + 1} completed`);
+                        }
+                        updateTimerUI();
+                    }
+                }, 1000);
+            }
+        }
+        
+        function adjustTime(amount) {
+            if (!selectedTeaId || currentMode === 'free') return;
+            timeLeft += amount;
+            if (timeLeft < 0) timeLeft = 0;
+            currentSteps[currentStepIndex] = timeLeft;
+            updateTimerUI();
+        }
+        
+        function nextFreeSteep() {
+            if (!selectedTeaId) return;
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('startBtn').innerText = 'Start';
+            document.getElementById('startBtn').className = 'btn-main btn-start';
+            currentStepIndex++;
+            const picker = document.getElementById('timePicker');
+            timeLeft = parseInt(picker.value);
+            updateTimerUI();
+        }
+        
+        function resetCurrentStep() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('startBtn').innerText = 'Start';
+            document.getElementById('startBtn').className = 'btn-main btn-start';
+            if (currentMode === 'preset') {
+                timeLeft = currentSteps[currentStepIndex];
+            } else {
+                const picker = document.getElementById('timePicker');
+                timeLeft = parseInt(picker.value);
+            }
+            updateTimerUI();
+        }
+        
+        function resetTimerSystem() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('startBtn').innerText = 'Start';
+            document.getElementById('startBtn').className = 'btn-main btn-start';
+            if (currentMode === 'preset') {
+                currentSteps = [60, 15, 40];
+                currentStepIndex = 0;
+                timeLeft = currentSteps[0];
+            } else {
+                currentStepIndex = 0;
+                const picker = document.getElementById('timePicker');
+                timeLeft = picker ? parseInt(picker.value) : 15;
+            }
+        }
+        
+        function finishSession() {
+            const activeTea = teas.find(t => t.id === selectedTeaId);
+            if (!activeTea) return;
+            if (activeTea.weight >= activeTea.portion) {
+                activeTea.weight -= activeTea.portion;
+                saveToStorage();
+                alert(`Deducted ${activeTea.portion}g`);
+            } else {
+                alert('Not enough tea');
+            }
+            resetTimerSystem();
+            updateTimerUI();
+        }
+        
+        initPicker();
+        renderTeas();
+        updateTimerUI();
+    </script>
+</body>
+</html>
